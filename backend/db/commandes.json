@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "nom_client": "Alice",
+        "produit_id": 2,
+        "quantite": 3,
+        "prix_total": 60.00,
+        "date_commande": "2023-10-01"
+    },
+    {
+        "id": 2,
+        "nom_client": "Bob",
+        "produit_id": 1,
+        "quantite": 2,
+        "prix_total": 30.00,
+        "date_commande": "2023-09-29"
+    }
+]
