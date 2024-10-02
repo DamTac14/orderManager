@@ -1,8 +1,0 @@
-RewriteEngine On
-
-# Redirection de l'index.html du dossier frontend vers la racine
-RewriteRule ^index\.html$ frontend/index.html [L]
-
-# Redirection pour les produits
-RewriteRule ^api/produits/?$ backend/api/produits.php [L]
-RewriteRule ^api/commandes/?$ backend/api/commandes.php [L]
