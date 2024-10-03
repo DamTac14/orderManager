@@ -63,6 +63,8 @@ class ProduitTest extends TestCase {
         $result = $this->produitController->listerProduits();
         $this->assertIsArray($result);
     }
+
+    
 }
 
 ?>

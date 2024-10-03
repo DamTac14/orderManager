@@ -10,18 +10,21 @@ tearDown() : Réinitialise l'environnement après chaque test pour assurer l'iso
 # Cas de Test
 
 ## Commandes
-- **testAjoutCommandeValide()** : Vérifie l'ajout d'une commande valide.
-- **testAjoutCommandeInvalide()** : Vérifie la gestion des erreurs lors de l'ajout d'une commande avec des données invalides.
-- **testAjoutCommandeSansNomClient()** : Vérifie que l'ajout d'une commande sans nom client retourne une erreur.
-- **testAjoutCommandeQuantiteNegatif()** : Vérifie que l'ajout d'une commande avec une quantité négative retourne une erreur.
-- **testListerCommandes()** : Vérifie que la liste des commandes est retournée correctement.
+- testAjoutCommandeValide() : Vérifie l'ajout d'une commande valide.
+- testAjoutCommandeInvalide() : Vérifie la gestion des erreurs lors de l'ajout d'une commande avec des données invalides.
+- testAjoutCommandeSansNomClient() : Vérifie que l'ajout d'une commande sans nom client retourne une erreur.
+- testAjoutCommandeQuantiteNegatif() : Vérifie que l'ajout d'une commande avec une quantité négative retourne une erreur.
+- testAjoutCommandePrixNegatif() : Vérifie que l'ajout d'une commande avec un prix négatif retourne une erreur.
+- testListerCommandes() : Vérifie que la liste des commandes est retournée correctement.
 
 ## Produits
-- **testAjoutProduitValide()** : Vérifie l'ajout d'un produit valide.
-- **testAjoutProduitInvalide()** : Vérifie la gestion des erreurs lors de l'ajout d'un produit avec des données invalides.
-- **testModificationProduit()** : Vérifie que les produits peuvent être modifiés.
-- **testSuppressionProduit()** : Vérifie que les produits peuvent être supprimés.
-- **testListerProduits()** : Vérifie que la liste des produits est retournée correctement.
+- testAjoutProduitValide() : Vérifie l'ajout d'un produit valide.
+- testAjoutProduitInvalide() : Vérifie la gestion des erreurs lors de l'ajout d'un produit avec des données invalides.
+- testAjoutProduitPrixNegatif() : Vérifie que l'ajout d'un produit avec un prix négatif retourne une erreur.
+- testAjoutProduitQuantiteNegatif() : Vérifie que l'ajout d'un produit avec une quantité négative retourne une erreur.
+- testModificationProduit() : Vérifie que les produits peuvent être modifiés.
+- testSuppressionProduit() : Vérifie que les produits peuvent être supprimés.
+- testListerProduits() : Vérifie que la liste des produits est retournée correctement.
 
 
 # Exécution des Tests
