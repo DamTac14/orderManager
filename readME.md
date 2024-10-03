@@ -31,3 +31,5 @@ tearDown() : Réinitialise l'environnement après chaque test pour assurer l'iso
 # Utilisez la commande suivante pour exécuter les tests :
 
 vendor/bin/phpunit --bootstrap vendor/autoload.php tests/
+
+# Voir db.php pour la connexion en bdd sur serveur distant
