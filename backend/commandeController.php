@@ -1,102 +1,48 @@
 <?php
-require_once 'validation.php';
+// CommandeController.php
+include_once 'db.php';
 
-function getCommandesData() {
-    $jsonData = file_get_contents(__DIR__ . '/db/commandes.json');
-    return json_decode($jsonData, true);
-}
+class CommandeController {
+    private $pdo;
 
-function saveCommandesData($data) {
-    $jsonData = json_encode($data, JSON_PRETTY_PRINT);
-    file_put_contents(__DIR__ . '/db/commandes.json', $jsonData);
-}
-
-function ajouterCommande() {
-    $nom_client = $_POST['nom_client'] ?? null;
-    $produit_id = $_POST['produit_id'] ?? null;
-    $quantite = $_POST['quantite'] ?? null;
-
-    if (!validerCommande($nom_client, $quantite)) {
-        echo json_encode(['error' => 'Donnees invalides']);
-        return;
+    public function __construct($pdo) {
+        $this->pdo = $pdo;
     }
 
-    $commandes = getCommandesData();
-
-    $nouvelle_commande = [
-        'id' => count($commandes) + 1, 
-        'nom_client' => $nom_client,
-        'produit_id' => $produit_id,
-        'quantite' => $quantite,
-        'date_commande' => date('Y-m-d H:i:s')
-    ];
-
-    $commandes[] = $nouvelle_commande;
-
-    saveCommandesData($commandes);
-
-    echo json_encode(['success' => 'Commande ajoutee']);
-}
-
-function listerCommandes() {
-    try {
-        $commandes = getCommandesData();
-
-        $produits = json_decode(file_get_contents(__DIR__ . '/db/produits.json'), true);
-
-        foreach ($commandes as &$commande) {
-            foreach ($produits as $produit) {
-                if ($produit['id'] == $commande['produit_id']) {
-                    $commande['produit'] = $produit['nom'];
-                    break;
-                }
-            }
+    public function ajouterCommande($nom_client, $produit_id, $quantite, $prix_total) {
+        // Validation des données
+        if (empty($nom_client) || $quantite < 0 || $prix_total < 0) {
+            return 'Données invalides'; // Message d'erreur
         }
 
-        echo json_encode($commandes);
-    } catch (Exception $e) {
-        echo json_encode(['error' => 'Erreur lors de la recuperation des commandes : ' . $e->getMessage()]);
+        $sql = "INSERT INTO commandes (nom_client, produit_id, quantite, prix_total, date_commande) VALUES (?, ?, ?, ?, NOW())";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$nom_client, $produit_id, $quantite, $prix_total]);
+        return true; // Retourne true si l'ajout a réussi
     }
-}
-
-function supprimerCommande() {
-    $id = $_GET['id'] ?? null;
-
-    if (empty($id)) {
-        echo json_encode(['error' => 'ID de la commande manquant']);
-        return;
+    public function listerCommandes() {
+        $sql = "SELECT c.*, p.nom AS produit_nom 
+                FROM commandes c 
+                JOIN produits p ON c.produit_id = p.id";
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
 
-    try {
-        $commandes = getCommandesData();
-
-        // Vérifiez si la commande existe
-        $commandeExists = false;
-        foreach ($commandes as $commande) {
-            if ($commande['id'] == intval($id)) { // Assurez-vous de comparer en tant qu'entier
-                $commandeExists = true;
-                break;
-            }
+    public function modifierCommande($id, $nom_client, $produit_id, $quantite, $prix_total) {
+        if (empty($nom_client) || $quantite < 0 || $prix_total < 0) {
+            return 'Données invalides'; // Message d'erreur
         }
 
-        if (!$commandeExists) {
-            echo json_encode(['error' => 'Commande non trouvée']);
-            return;
-        }
+        $sql = "UPDATE commandes SET nom_client = ?, produit_id = ?, quantite = ?, prix_total = ? WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$nom_client, $produit_id, $quantite, $prix_total, $id]);
+    }
 
-        // Supprimer la commande
-        $commandes = array_filter($commandes, function($commande) use ($id) {
-            return $commande['id'] != intval($id); // Assurez-vous de comparer en tant qu'entier
-        });
-
-        $commandes = array_values($commandes);
-        saveCommandesData($commandes);
-
-        echo json_encode(['success' => 'Commande supprimée']);
-    } catch (Exception $e) {
-        echo json_encode(['error' => 'Erreur lors de la suppression de la commande : ' . $e->getMessage()]);
+    public function supprimerCommande($id) {
+        $sql = "DELETE FROM commandes WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$id]);
     }
 }
-
-
 ?>

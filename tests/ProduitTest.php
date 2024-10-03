@@ -1,121 +1,68 @@
 <?php
+
+require_once __DIR__ . '/../backend/ProduitController.php';
+require_once __DIR__ . '/../backend/db.php';
+
+// ProduitControllerTest.php
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../backend/produitController.php';
-
 class ProduitTest extends TestCase {
+    private $produitController;
+    private $pdoMock;
 
     protected function setUp(): void {
-        // Réinitialiser le fichier JSON pour les tests
-        file_put_contents(__DIR__ . '/../backend/db/produits.json', json_encode([]));
-
-        // Ajouter un produit initial
-        $produits = getProduitsData(); // Supposons que cette fonction lit les données JSON
-        $produits[] = [
-            'nom' => 'Produit 1',
-            'description' => 'Description 1',
-            'prix' => 10.5,
-            'quantite' => 20
-        ];
-        saveProduitsData($produits); // Fonction pour sauvegarder les données
-    }
-
-    protected function tearDown(): void {
-        // Réinitialiser le fichier JSON après chaque test
-        file_put_contents(__DIR__ . '/../backend/db/produits.json', json_encode([]));
+        $this->pdoMock = $this->createMock(PDO::class);
+        $this->produitController = new ProduitController($this->pdoMock);
     }
 
     public function testAjoutProduitValide() {
-        $_POST['produitNom'] = 'Produit Test';
-        $_POST['produitDescription'] = 'Description Test';
-        $_POST['produitPrix'] = 15.0;
-        $_POST['produitQuantite'] = 30;
+        $stmtMock = $this->createMock(PDOStatement::class);
+        $stmtMock->method('execute')->willReturn(true);
+        $this->pdoMock->method('prepare')->willReturn($stmtMock);
 
-        ob_start();
-        ajouterProduit();
-        $output = ob_get_clean();
-
-        $response = json_decode($output, true);
-        $this->assertStringContainsString('Produit ajouté', $response['success']);
-
-        $produits = getProduitsData();
-        $produit = array_filter($produits, function($p) {
-            return $p['nom'] === 'Produit Test';
-        });
-        
-        $this->assertNotEmpty($produit);
-        $this->assertEquals('Produit Test', reset($produit)['nom']);
+        $result = $this->produitController->ajouterProduit('Produit Test', 'Description Test', 50, 10);
+        $this->assertTrue($result);
     }
 
     public function testAjoutProduitInvalide() {
-        $_POST['produitNom'] = 'Produit Invalide';
-        $_POST['produitDescription'] = 'Description';
-        $_POST['produitPrix'] = -5.0; // Prix invalide
-        $_POST['produitQuantite'] = 10;
+        $result = $this->produitController->ajouterProduit('', 'Description Test', 50, 10);
+        $this->assertEquals('Données invalides', $result);
+    }
 
-        ob_start();
-        ajouterProduit();
-        $output = ob_get_clean();
+    public function testAjoutProduitPrixNegatif() {
+        $result = $this->produitController->ajouterProduit('Produit Test', 'Description Test', -50, 10);
+        $this->assertEquals('Données invalides', $result);
+    }
 
-        $response = json_decode($output, true);
-        $this->assertStringContainsString('Données invalides', $response['error']);
-
-        $produits = getProduitsData();
-        $produit = array_filter($produits, function($p) {
-            return $p['nom'] === 'Produit Invalide';
-        });
-        
-        $this->assertEmpty($produit);
+    public function testAjoutProduitQuantiteNegatif() {
+        $result = $this->produitController->ajouterProduit('Produit Test', 'Description Test', 50, -10);
+        $this->assertEquals('Données invalides', $result);
     }
 
     public function testModificationProduit() {
-        $produits = getProduitsData();
-        $produitId = 0; // On suppose que le produit a un ID basé sur sa position dans le tableau
-
-        $_POST['produitId'] = $produitId;
-        $_POST['produitNom'] = 'Produit Modifié';
-        $_POST['produitDescription'] = 'Description Modifiée';
-        $_POST['produitPrix'] = 20.0;
-        $_POST['produitQuantite'] = 25;
-
-        ob_start();
-        modifierProduit();
-        $output = ob_get_clean();
-
-        $response = json_decode($output, true);
-        $this->assertStringContainsString('Produit modifié', $response['success']);
-
-        $produits = getProduitsData();
-        $produitModifie = $produits[$produitId];
-        $this->assertEquals('Produit Modifié', $produitModifie['nom']);
-        $this->assertEquals(20.0, $produitModifie['prix']);
+        $stmtMock = $this->createMock(PDOStatement::class);
+        $stmtMock->method('execute')->willReturn(true);
+        $this->pdoMock->method('prepare')->willReturn($stmtMock);
+        
+        $result = $this->produitController->modifierProduit(1, 'Produit Modifié', 'Nouvelle Description', 60, 15);
+        $this->assertTrue($result);
     }
 
     public function testSuppressionProduit() {
-        $produits = getProduitsData();
-        $produitId = 0; // On suppose que le produit a un ID basé sur sa position dans le tableau
-
-        $_GET['id'] = $produitId;
-
-        ob_start();
-        supprimerProduit();
-        $output = ob_get_clean();
-
-        $response = json_decode($output, true);
-        $this->assertStringContainsString('Produit supprimé', $response['success']);
-
-        $produits = getProduitsData();
-        $this->assertArrayNotHasKey($produitId, $produits);
+        $stmtMock = $this->createMock(PDOStatement::class);
+        $stmtMock->method('execute')->willReturn(true);
+        $this->pdoMock->method('prepare')->willReturn($stmtMock);
+        
+        $result = $this->produitController->supprimerProduit(1);
+        $this->assertTrue($result);
     }
 
     public function testListerProduits() {
-        ob_start();
-        listerProduits();
-        $output = ob_get_clean();
-
-        $produits = json_decode($output, true);
-        $this->assertIsArray($produits);
-        $this->assertCount(1, $produits);
-        $this->assertEquals('Produit 1', $produits[0]['nom']);
+        $stmtMock = $this->createMock(PDOStatement::class);
+        $this->pdoMock->method('query')->willReturn($stmtMock);
+        $result = $this->produitController->listerProduits();
+        $this->assertIsArray($result);
     }
 }
+
+?>
