@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentProduitId = null;
 
     function fetchProduits() {
-        fetch('/api/produits')
+        fetch('../backend/api/produits')
             .then(response => response.json())
             .then(data => {
                 produitsTableBody.innerHTML = "";
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     function fetchCommandes() {
-        fetch('/api/commandes')
+        fetch('../backend/api/commandes')
             .then(response => response.json())
             .then(data => {
                 commandesTableBody.innerHTML = "";
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function fetchProduitsForCommande() {
-        fetch('/api/produits')
+        fetch('../backend/api/produits')
             .then(response => response.json())
             .then(data => {
                 const commandeProduitSelect = document.getElementById("commandeProduit");
@@ -74,8 +74,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const formDataObject = Object.fromEntries(formData.entries()); // Crée un objet à partir de FormData
     
         const actionUrl = currentProduitId 
-            ? `/api/produits/${currentProduitId}` // Pour le PUT
-            : '/api/produits'; // Pour le POST
+            ? `../backend/api/produits/${currentProduitId}` // Pour le PUT
+            : '../backend/api/produits'; // Pour le POST
     
         fetch(actionUrl, {
             method: currentProduitId ? 'PUT' : 'POST',
@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault(); 
         const formData = new FormData(commandeForm);
     
-        fetch('/api/commandes', {
+        fetch('../backend/api/commandes', {
             method: 'POST',
             body: formData
         }).then(response => response.json())
@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
       window.modifierProduit = function(id) {
-        fetch(`/api/produits/${id}`)
+        fetch(`../backend/api/produits/${id}`)
             .then(response => response.json())
             .then(produit => {
                 if (produit.error) {
@@ -142,7 +142,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
 
     window.supprimerProduit = function(id) {
-        fetch(`/api/produits/${id}`, { method: 'DELETE' })
+        fetch(`../backend/api/produits/${id}`, { method: 'DELETE' })
             .then(response => response.json())
             .then(data => {
                 if (data.error) {
@@ -155,7 +155,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     window.supprimerCommande = function(id) {
-        fetch(`/api/commandes/${id}`, { method: 'DELETE' })
+        fetch(`../backend/api/commandes/${id}`, { method: 'DELETE' })
             .then(response => response.json())
             .then(data => {
                 if (data.error) {
