@@ -165,7 +165,6 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => console.error('Erreur lors de la création de la commande :', error));
     });
     
-    
     window.modifierProduit = function(id) {
         console.log('Modifier produit ID :', id); // Log de l'ID
         fetch(`/api/produits/${id}`)
@@ -175,23 +174,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
                 return response.json();
             })
-            .then(produits => {
-                console.log('Produits récupérés :', produits); // Log des produits
+            .then(produit => {
+                console.log('Produit récupéré :', produit); // Log du produit
     
-                // Vérifiez que le tableau n'est pas vide et contient des données
-                if (produits.length === 0) {
-                    console.error('Aucun produit trouvé avec cet ID.');
+                // Vérifiez que le produit n'est pas indéfini
+                if (!produit) {
+                    console.error('Produit non trouvé.');
                     alert('Erreur : produit non trouvé.');
-                    return;
-                }
-    
-                // Prenez le premier produit du tableau
-                const produit = produits[0];
-    
-                // Vérifiez si le produit a les propriétés attendues
-                if (!produit.nom || !produit.description || !produit.prix || !produit.quantite) {
-                    console.error('Le produit n\'a pas les propriétés attendues :', produit);
-                    alert('Erreur dans les données du produit.');
                     return;
                 }
     
