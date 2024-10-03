@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentProduitId = null;
 
     function fetchProduits() {
-        fetch('../backend/api/produits')
+        fetch('backend/api/produits')
             .then(response => response.json())
             .then(data => {
                 produitsTableBody.innerHTML = "";
@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function fetchCommandes() {
-        fetch('../backend/api/commandes')
+        fetch('backend/api/commandes')
             .then(response => response.json())
             .then(data => {
                 commandesTableBody.innerHTML = "";
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function fetchProduitsForCommande() {
-        fetch('../backend/api/produits')
+        fetch('backend/api/produits')
             .then(response => response.json())
             .then(data => {
                 const commandeProduitSelect = document.getElementById("commandeProduit");
@@ -100,8 +100,8 @@ document.addEventListener("DOMContentLoaded", function () {
         };
     
         const actionUrl = currentProduitId 
-            ? `../backend/api/produits/${currentProduitId}` // Pour le PUT
-            : '../backend/api/produits'; // Pour le POST
+            ? `backend/api/produits/${currentProduitId}` // Pour le PUT
+            : 'backend/api/produits'; // Pour le POST
     
         fetch(actionUrl, {
             method: currentProduitId ? 'PUT' : 'POST',
@@ -146,7 +146,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Inclure le prix total dans les données envoyées
         formDataObject.prix_total = prixTotal.toFixed(2); // Arrondi à deux décimales
     
-        fetch('../backend/api/commandes', {
+        fetch('backend/api/commandes', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
     window.modifierProduit = function(id) {
         console.log('Modifier produit ID :', id); // Log de l'ID
-        fetch(`../backend/api/produits/${id}`)
+        fetch(`backend/api/produits/${id}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Erreur lors de la récupération du produit');
@@ -211,7 +211,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
     
     window.supprimerProduit = function(id) {
-        fetch(`../backend/api/produits/${id}`, { method: 'DELETE' })
+        fetch(`backend/api/produits/${id}`, { method: 'DELETE' })
             .then(response => response.json())
             .then(data => {
                 if (data.error) {
@@ -224,7 +224,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     window.supprimerCommande = function(id) {
-        fetch(`../backend/api/commandes/${id}`, { method: 'DELETE' })
+        fetch(`backend/api/commandes/${id}`, { method: 'DELETE' })
             .then(response => response.json())
             .then(data => {
                 if (data.error) {
