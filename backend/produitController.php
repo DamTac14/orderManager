@@ -37,6 +37,13 @@ class ProduitController {
         return $stmt->execute([$nom, $description, $prix, $quantite, $id]);
     }
 
+    public function getProduitById($id) {
+        $sql = "SELECT * FROM produits WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC); // Retourne le produit ou false si non trouvé
+    }
+
     public function supprimerProduit($id) {
         $sql = "DELETE FROM produits WHERE id = ?";
         $stmt = $this->pdo->prepare($sql);
