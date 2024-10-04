@@ -2,11 +2,6 @@
 CommandeTest.php : tests des fonctionnalités liées aux commandes.
 ProduitTest.php : tests des fonctionnalités liées aux produits.
 
-# Méthodes de Test
-# Setup et Teardown
-setUp() : Prépare l'environnement avant chaque test en réinitialisant les fichiers JSON et en créant des données initiales.
-tearDown() : Réinitialise l'environnement après chaque test pour assurer l'isolation des tests.
-
 # Cas de Test
 
 ## Commandes
