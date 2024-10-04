@@ -1,5 +1,4 @@
 <?php
-// CommandeController.php
 include_once 'db.php';
 
 class CommandeController {
@@ -10,15 +9,14 @@ class CommandeController {
     }
 
     public function ajouterCommande($nom_client, $produit_id, $quantite, $prix_total) {
-        // Validation des données
         if (empty($nom_client) || $quantite < 0 || $prix_total < 0) {
-            return 'Données invalides'; // Message d'erreur
+            return 'Données invalides'; 
         }
 
         $sql = "INSERT INTO commandes (nom_client, produit_id, quantite, prix_total, date_commande) VALUES (?, ?, ?, ?, NOW())";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$nom_client, $produit_id, $quantite, $prix_total]);
-        return true; // Retourne true si l'ajout a réussi
+        return true; 
     }
     public function listerCommandes() {
         $sql = "SELECT c.*, p.nom AS produit_nom 
@@ -31,7 +29,7 @@ class CommandeController {
 
     public function modifierCommande($id, $nom_client, $produit_id, $quantite, $prix_total) {
         if (empty($nom_client) || $quantite < 0 || $prix_total < 0) {
-            return 'Données invalides'; // Message d'erreur
+            return 'Données invalides'; 
         }
 
         $sql = "UPDATE commandes SET nom_client = ?, produit_id = ?, quantite = ?, prix_total = ? WHERE id = ?";

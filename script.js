@@ -64,28 +64,23 @@ document.addEventListener("DOMContentLoaded", function () {
                     `;
                 });
     
-                // Ajoutez un écouteur d'événements pour mettre à jour le prix lors de la sélection d'un produit
                 commandeProduitSelect.addEventListener('change', updatePrixTotal);
             })
             .catch(error => console.error('Erreur lors de la récupération des produits :', error));
     }
     
-    // Fonction pour mettre à jour le prix total
     function updatePrixTotal() {
         const produitSelect = document.getElementById("commandeProduit");
         const quantiteInput = document.getElementById("commandeQuantite");
         const prixTotalInput = document.getElementById("prix_total");
     
-        // Récupérer le prix du produit sélectionné
         const prixProduit = produitSelect.options[produitSelect.selectedIndex].dataset.prix;
         const quantite = quantiteInput.value;
     
-        // Calculer le prix total
         const prixTotal = prixProduit * quantite;
-        prixTotalInput.value = prixTotal.toFixed(2); // Arrondir à deux décimales
+        prixTotalInput.value = prixTotal.toFixed(2); 
     }
     
-    // Écoutez les changements dans le champ de quantité pour mettre à jour le prix total
     document.getElementById("commandeQuantite").addEventListener('input', updatePrixTotal);
     
     
@@ -100,8 +95,8 @@ document.addEventListener("DOMContentLoaded", function () {
         };
     
         const actionUrl = currentProduitId 
-            ? `/api/produits/${currentProduitId}` // Pour le PUT
-            : '/api/produits'; // Pour le POST
+            ? `/api/produits/${currentProduitId}` 
+            : '/api/produits'; 
     
         fetch(actionUrl, {
             method: currentProduitId ? 'PUT' : 'POST',
@@ -112,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Erreur de réseau'); // Gérer les erreurs de réseau
+                throw new Error('Erreur de réseau'); 
             }
             return response.json();
         })
@@ -135,16 +130,13 @@ document.addEventListener("DOMContentLoaded", function () {
         const formData = new FormData(commandeForm);
         const formDataObject = Object.fromEntries(formData.entries());
     
-        // Récupérer le prix du produit sélectionné
         const produitSelect = document.getElementById("commandeProduit");
         const prixProduit = produitSelect.options[produitSelect.selectedIndex].dataset.prix;
         const quantite = formDataObject.quantite;
     
-        // Calculer le prix total
         const prixTotal = prixProduit * quantite;
     
-        // Inclure le prix total dans les données envoyées
-        formDataObject.prix_total = prixTotal.toFixed(2); // Arrondi à deux décimales
+        formDataObject.prix_total = prixTotal.toFixed(2); 
     
         fetch('/api/commandes', {
             method: 'POST',
@@ -166,7 +158,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     
     window.modifierProduit = function(id) {
-        console.log('Modifier produit ID :', id); // Log de l'ID
+        console.log('Modifier produit ID :', id); 
         fetch(`/api/produits/${id}`)
             .then(response => {
                 if (!response.ok) {
@@ -175,23 +167,20 @@ document.addEventListener("DOMContentLoaded", function () {
                 return response.json();
             })
             .then(produit => {
-                console.log('Produit récupéré :', produit); // Log du produit
+                console.log('Produit récupéré :', produit); 
     
-                // Vérifiez que le produit n'est pas indéfini
                 if (!produit) {
                     console.error('Produit non trouvé.');
                     alert('Erreur : produit non trouvé.');
                     return;
                 }
     
-                // Remplissez le formulaire avec les données du produit
-                document.getElementById("produitId").value = produit.id || ''; // Utiliser '' si undefined
+                document.getElementById("produitId").value = produit.id || ''; 
                 document.getElementById("produitNom").value = produit.nom || '';
                 document.getElementById("produitDescription").value = produit.description || '';
                 document.getElementById("produitPrix").value = produit.prix || '';
                 document.getElementById("produitQuantite").value = produit.quantite || '';
     
-                // Mettez à jour l'ID du produit courant pour la modification
                 currentProduitId = produit.id;
                 submitButton.textContent = "Modifier"; 
             })

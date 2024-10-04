@@ -1,6 +1,6 @@
 <?php
 function getDB() {
-    static $db = null; // Utiliser static pour garder la connexion entre les appels
+    static $db = null; 
     if ($db === null) {
         try {
             $db = new PDO('mysql:host=localhost;dbname=gestion_produits_commandes;charset=utf8mb4', 'root', 'votre_mot_de_passe');

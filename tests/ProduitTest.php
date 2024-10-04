@@ -3,7 +3,6 @@
 require_once __DIR__ . '/../backend/ProduitController.php';
 require_once __DIR__ . '/../backend/db.php';
 
-// ProduitControllerTest.php
 use PHPUnit\Framework\TestCase;
 
 class ProduitTest extends TestCase {

@@ -1,5 +1,4 @@
 <?php
-// ProduitController.php
 include_once 'db.php';
 
 class ProduitController {
@@ -10,15 +9,14 @@ class ProduitController {
     }
 
     public function ajouterProduit($nom, $description, $prix, $quantite) {
-        // Validation des données
         if (empty($nom) || $prix < 0 || $quantite < 0) {
-            return 'Données invalides'; // Message d'erreur
+            return 'Données invalides';
         }
 
         $sql = "INSERT INTO produits (nom, description, prix, quantite, created_at) VALUES (?, ?, ?, ?, NOW())";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$nom, $description, $prix, $quantite]);
-        return true; // Retourne true si l'ajout a réussi
+        return true; 
     }
 
     public function listerProduits() {
@@ -29,7 +27,7 @@ class ProduitController {
 
     public function modifierProduit($id, $nom, $description, $prix, $quantite) {
         if (empty($nom) || $prix < 0 || $quantite < 0) {
-            return 'Données invalides'; // Message d'erreur
+            return 'Données invalides'; 
         }
 
         $sql = "UPDATE produits SET nom = ?, description = ?, prix = ?, quantite = ? WHERE id = ?";
@@ -41,7 +39,7 @@ class ProduitController {
         $sql = "SELECT * FROM produits WHERE id = ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC); // Retourne le produit ou false si non trouvé
+        return $stmt->fetch(PDO::FETCH_ASSOC); 
     }
 
     public function supprimerProduit($id) {
